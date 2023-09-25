@@ -6,10 +6,7 @@ const Card = ({ product }: { product: ProductState }) => {
   const { id, imgSrc, price, title } = product;
   return (
     <>
-      <div
-        key={id}
-        className="card h-56 md:h-80 rounded-none w-auto bg-base-100  "
-      >
+      <div className="card h-56 md:h-80 rounded-none w-auto bg-base-100  ">
         <figure className="relative">
           <img className="rounded-xl" src={imgSrc} alt="Shoes" />
 

@@ -8,6 +8,7 @@ import type { RootState } from "../store";
 
 function HomePage() {
   const products = useSelector((state: RootState) => state.products);
+
   return (
     <>
       {/* <main className="flex flex-col items-center"> */}
@@ -48,9 +49,9 @@ function HomePage() {
       </ul>
       {/* Product Listing */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 mt-4">
-        {products.map((item) => (
+        {products.map((item, i) => (
           // <Link to="/productdetails" preventScrollReset={true} state={item}>
-          <Card product={item} />
+          <Card product={item} key={i} />
           // </Link>
         ))}
       </div>

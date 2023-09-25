@@ -1,14 +1,15 @@
 import { Link } from "react-router-dom";
 import image6 from "../assets/image_full/image-02.png";
 
-// import { useState } from "react";
-// import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import backArrowIcon from "../assets/icons/arrow-right-back.svg";
 import arrowRightLine from "../assets/icons/arrow-right.svg";
 import bellIcon from "../assets/icons/bell-01.svg";
-import arrowIcon from "../assets/icons/home-line.svg";
-// import cartIcon from "../assets/icons/shopping-bag-03-white.svg";
-// import { addToCart } from "../store/cartSlice";
-// import { CardItem, ProductState } from "../types";
+import type { RootState } from "../store";
+import { decQuantity, incQuantity, removeFromCart } from "../store/cartSlice";
+import { CardItem } from "../types";
+
 const cartItem = {
   id: "6",
   title: "Regular fit black round neck",
@@ -22,23 +23,35 @@ const cartItem = {
 };
 
 function CartPage() {
+  const products = useSelector((state: RootState) => state.cart);
+  const [subToatl, setSubtoatl] = useState(0);
+
+  function calcTotalCost() {
+    const total = products.reduce(
+      (accumulator, product) => accumulator + product.price * product.quantity,
+      0
+    );
+    setSubtoatl(total);
+  }
+
+  useEffect(() => calcTotalCost(), [products]);
+
   return (
     <>
       {/* Header */}
       <div className="flex align-middle items-center mb-4">
         <Link to="../">
-          <img src={arrowIcon} alt="" />
+          <img src={backArrowIcon} alt="" />
         </Link>
-        <h1 className="flex-1 text-center text-2xl font-bold">Discover</h1>
+        <h1 className="flex-1 text-center text-2xl font-bold">Cart</h1>
         <img src={bellIcon} alt="" />
       </div>
       {/* Cart items */}
       {/* cart container */}
       <div className="grid gap-2 ">
-        <CartItem />
-        <CartItem />
-        <CartItem />
-        <CartItem />
+        {products.map((product) => (
+          <CartItem product={product} />
+        ))}
       </div>
       {/* voucher */}
       <input
@@ -51,7 +64,7 @@ function CartPage() {
       <div className="grid mt-4 gap-5">
         <div className="flex">
           <span className="flex-1 text-gray-500">Sub-total</span>
-          <span className="">INR 500</span>
+          <span className="">INR {subToatl}</span>
         </div>
         <div className="flex">
           <span className="flex-1 text-gray-500">VAT (%)</span>
@@ -65,7 +78,7 @@ function CartPage() {
       <div className="divider before:bg-black after:bg-black"></div>
       <div className="flex">
         <span className="flex-1">Total</span>
-        <span className="">INR 5000</span>
+        <span className="">INR {subToatl + 80}</span>
       </div>
       <div className="sticky bottom-0 bg-white py-4 px-6 border-t grid">
         <button className="btn btn-primary">
@@ -78,37 +91,51 @@ function CartPage() {
 
 export default CartPage;
 
-const CartItem = () => (
-  <>
-    <div>
-      <div className="flex h-28 items-center bg-gray-100 p-2 rounded-lg ">
-        {/* <figure className="m-1"> */}
-        <img
-          className="h-full w-16 mr-2 object-cover border-4 border-gray-300 "
-          src={cartItem.imgSrc}
-          alt="Movie"
-        />
-        {/* </figure> */}
-        <div className="flex-1">
-          <div className="flex">
-            <h2 className="flex-1 self-end">{cartItem.title}</h2>
-            <button className="btn">{"dl"}</button>
-          </div>
-          <span className="text-gray-500">Size {cartItem.size}</span>
-          <div className="flex">
-            <span className="block text-sm flex-1">INT {cartItem.price}</span>
-            <div>
-              <button className="rounded-lg px-3 bg-transparent border border-gray-300 ">
-                -
+const CartItem = ({ product }: { product: CardItem }) => {
+  const dispatch = useDispatch();
+  return (
+    <>
+      <div>
+        <div className="flex h-28 items-center bg-gray-100 p-2 rounded-lg ">
+          {/* <figure className="m-1"> */}
+          <img
+            className="h-full w-16 mr-2 object-cover border-4 border-gray-300 "
+            src={product.imgSrc}
+            alt={"prduct image"}
+          />
+          {/* </figure> */}
+          <div className="flex-1">
+            <div className="flex">
+              <h2 className="flex-1 self-end">{product.title}</h2>
+              <button
+                onClick={() => dispatch(removeFromCart(product.id))}
+                className="btn"
+              >
+                {"dl"}
               </button>
-              <button className="px-2">3</button>
-              <button className="rounded-lg px-3  bg-transparent  border border-gray-300">
-                +
-              </button>
+            </div>
+            <span className="text-gray-500">Size {product.size}</span>
+            <div className="flex">
+              <span className="block text-sm flex-1">INT {product.price}</span>
+              <div>
+                <button
+                  onClick={() => dispatch(decQuantity(product.id))}
+                  className="rounded-lg px-3 bg-transparent border border-gray-300 "
+                >
+                  -
+                </button>
+                <button className="px-2">{product.quantity}</button>
+                <button
+                  onClick={() => dispatch(incQuantity(product.id))}
+                  className="rounded-lg px-3  bg-transparent  border border-gray-300"
+                >
+                  +
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </>
-);
+    </>
+  );
+};

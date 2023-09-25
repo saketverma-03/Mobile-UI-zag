@@ -2,8 +2,8 @@ import { Link, useLocation } from "react-router-dom";
 
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import backArrowIcon from "../assets/icons/arrow-right-back.svg";
 import bellIcon from "../assets/icons/bell-01.svg";
-import arrowIcon from "../assets/icons/home-line.svg";
 import cartIcon from "../assets/icons/shopping-bag-03-white.svg";
 import { addToCart } from "../store/cartSlice";
 import { CardItem, ProductState } from "../types";
@@ -28,8 +28,7 @@ function ProductdetailsPage() {
     <>
       <div className="flex">
         <Link to="../">
-          {" "}
-          <img src={arrowIcon} alt="" />
+          <img src={backArrowIcon} alt="" />
         </Link>
         <h1 className="flex-1 text-center text-3xl font-bold">Discover</h1>
         <img src={bellIcon} alt="" />

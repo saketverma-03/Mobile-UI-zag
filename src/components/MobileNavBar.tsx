@@ -7,7 +7,7 @@ import carIcon from "../assets/icons/shopping-bag-03.svg";
 function MobileNavBar() {
   return (
     <>
-      <div className="z-[3] btm-nav sticky bottom-0 sm:hidden border-t-2">
+      <div className="z-[3] btm-nav sticky bottom-0 lg:hidden border-t-2">
         <button>
           <img src={homeIcon} alt="" />
           <span className="text-xs">Home</span>
